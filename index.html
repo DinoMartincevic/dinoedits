@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>dinoedits — Video editing that earns the watch</title>
+<meta name="description" content="dinoedits is a video editor specialising in short-form for creators and brands — plus YouTube and brand films, cut to keep people watching. Book a call." />
+
+<!-- ====================================================================
+     dinoedits — "The Cutting Room"
+     Single-file site. No build step. Edit the marked spots:
+       1. SHOWREEL  -> search "REPLACE: SHOWREEL"
+       2. GALLERY   -> search "REPLACE: GALLERY IMAGE"
+       3. CONTACT   -> search "REPLACE: EMAIL"
+     Instagram is already set to dino.render.
+===================================================================== -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --ink:#0E0D0B;          /* warm near-black */
+  --ink-2:#16140F;        /* raised panel    */
+  --paper:#F4EFE6;        /* warm off-white  */
+  --muted:#A39C8E;        /* warm grey       */
+  --line:rgba(244,239,230,.12);
+  --ember:#E9A23B;        /* amber accent    */
+  --ember-2:#E0623A;      /* ember accent    */
+  --serif:"Fraunces",Georgia,serif;
+  --sans:"Inter",system-ui,sans-serif;
+  --mono:"Space Mono","SFMono-Regular",monospace;
+  --maxw:1180px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink);
+  color:var(--paper);
+  font-family:var(--sans);
+  font-size:16px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+::selection{background:var(--ember);color:var(--ink)}
+
+/* Film grain overlay */
+body::after{
+  content:"";
+  position:fixed;inset:0;z-index:9999;pointer-events:none;
+  opacity:.045;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 clamp(20px,5vw,40px)}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+
+/* timecode label */
+.tc{
+  font-family:var(--mono);font-size:12px;letter-spacing:.08em;
+  color:var(--ember);text-transform:uppercase;
+  display:inline-flex;align-items:center;gap:8px;
+}
+.tc::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--ember-2);
+  box-shadow:0 0 0 0 rgba(224,98,58,.6);animation:rec 2s infinite}
+@keyframes rec{0%{box-shadow:0 0 0 0 rgba(224,98,58,.5)}70%{box-shadow:0 0 0 7px rgba(224,98,58,0)}100%{box-shadow:0 0 0 0 rgba(224,98,58,0)}}
+
+/* ---------- NAV ---------- */
+header{position:sticky;top:0;z-index:100;
+  backdrop-filter:blur(10px);
+  background:linear-gradient(var(--ink),rgba(14,13,11,.72));
+  border-bottom:1px solid var(--line)}
+nav{display:flex;align-items:center;justify-content:space-between;height:72px}
+.logo{font-family:var(--serif);font-size:23px;font-weight:600;letter-spacing:-.01em}
+.logo span{color:var(--ember)}
+.nav-links{display:flex;gap:34px;align-items:center}
+.nav-links a{font-size:14.5px;color:var(--muted);transition:color .2s}
+.nav-links a:hover{color:var(--paper)}
+.btn{
+  font-family:var(--sans);font-size:14.5px;font-weight:500;
+  display:inline-flex;align-items:center;gap:9px;
+  padding:11px 20px;border-radius:100px;cursor:pointer;border:1px solid transparent;
+  transition:transform .15s,background .2s,color .2s;
+}
+.btn-primary{background:var(--ember);color:var(--ink)}
+.btn-primary:hover{transform:translateY(-1px);background:var(--paper)}
+.btn-ghost{border-color:var(--line);color:var(--paper)}
+.btn-ghost:hover{border-color:var(--paper)}
+.menu-btn{display:none;background:none;border:0;color:var(--paper);font-size:24px;cursor:pointer}
+
+/* ---------- HERO ---------- */
+.hero{padding:clamp(46px,8vw,92px) 0 clamp(40px,6vw,70px)}
+.hero-top{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap;margin-bottom:34px}
+.hero h1{
+  font-family:var(--serif);font-weight:500;
+  font-size:clamp(40px,7.2vw,88px);line-height:.98;letter-spacing:-.02em;
+  max-width:14ch;
+}
+.hero h1 em{font-style:italic;color:var(--ember)}
+.hero-lede{max-width:38ch;color:var(--muted);font-size:clamp(15px,1.4vw,18px)}
+.hero-lede strong{color:var(--paper);font-weight:500}
+
+/* showreel film gate */
+.reel{position:relative;margin-top:8px;border-radius:14px;overflow:hidden;
+  border:1px solid var(--line);
+  background:
+    radial-gradient(120% 140% at 30% 0%,#241f17 0%,#100e0a 55%,#0b0a07 100%);
+  aspect-ratio:16/9;display:grid;place-items:center;cursor:pointer}
+.reel video,.reel iframe{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border:0}
+.reel::before{ /* sprocket bars */
+  content:"";position:absolute;left:0;right:0;top:0;height:14px;
+  background:repeating-linear-gradient(90deg,transparent 0 18px,rgba(0,0,0,.55) 18px 30px);
+  box-shadow:0 calc(100% - 14px) 0 rgba(0,0,0,.0);opacity:.5}
+.reel .gate-foot{position:absolute;left:0;right:0;bottom:0;height:14px;
+  background:repeating-linear-gradient(90deg,transparent 0 18px,rgba(0,0,0,.55) 18px 30px);opacity:.5}
+.play{position:relative;z-index:3;width:84px;height:84px;border-radius:50%;
+  background:var(--ember);display:grid;place-items:center;
+  transition:transform .2s;box-shadow:0 18px 50px rgba(233,162,59,.28)}
+.reel:hover .play{transform:scale(1.07)}
+.play::after{content:"";margin-left:5px;border-style:solid;border-width:13px 0 13px 22px;border-color:transparent transparent transparent var(--ink)}
+.reel-meta{position:absolute;z-index:3;left:18px;bottom:22px;font-family:var(--mono);font-size:12px;color:var(--paper);letter-spacing:.06em}
+.reel-meta .dim{color:var(--muted)}
+.reel-tag{position:absolute;z-index:3;right:18px;top:24px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--paper);border:1px solid var(--line);padding:5px 10px;border-radius:6px;background:rgba(0,0,0,.25)}
+
+/* marquee strip */
+.strip{border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;background:var(--ink-2)}
+.strip-row{display:flex;gap:48px;white-space:nowrap;padding:16px 0;font-family:var(--mono);
+  font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+  animation:marq 28s linear infinite}
+.strip-row span{display:inline-flex;gap:48px}
+.strip-row b{color:var(--ember);font-weight:400}
+@keyframes marq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ---------- SECTION SHELL ---------- */
+section{padding:clamp(64px,9vw,118px) 0}
+.eyebrow{margin-bottom:20px}
+.section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:48px}
+.section-head h2{font-family:var(--serif);font-weight:500;font-size:clamp(30px,4.4vw,54px);line-height:1.02;letter-spacing:-.02em;max-width:18ch}
+.section-head p{max-width:34ch;color:var(--muted)}
+
+/* ---------- GALLERY ---------- */
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:30px}
+.chip{font-family:var(--mono);font-size:12.5px;letter-spacing:.04em;color:var(--muted);
+  border:1px solid var(--line);background:transparent;padding:8px 15px;border-radius:100px;cursor:pointer;transition:.2s}
+.chip:hover{color:var(--paper)}
+.chip.active{color:var(--ink);background:var(--paper);border-color:var(--paper)}
+.gallery{display:grid;grid-template-columns:repeat(12,1fr);gap:18px}
+figure.work{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line);
+  background:#15130e;grid-column:span 6;aspect-ratio:16/10;cursor:pointer}
+figure.work.tall{grid-column:span 6;aspect-ratio:16/10}
+figure.work.big{grid-column:span 8;aspect-ratio:16/9}
+figure.work.small{grid-column:span 4;aspect-ratio:4/5}
+/* placeholder art until real thumbnails are dropped in */
+.work .ph{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .6s ease}
+figure.work:hover .ph{transform:scale(1.05)}
+.work .ph::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(0,0,0,0) 35%,rgba(8,7,5,.85) 100%)}
+.work figcaption{position:absolute;z-index:2;left:18px;right:18px;bottom:16px;
+  display:flex;justify-content:space-between;align-items:flex-end;gap:12px;
+  transform:translateY(6px);opacity:.92;transition:.3s}
+figure.work:hover figcaption{transform:translateY(0);opacity:1}
+.work .ttl{font-family:var(--serif);font-size:21px;font-weight:500}
+.work .cat{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--ember);text-transform:uppercase}
+.work .num{position:absolute;z-index:2;top:14px;left:16px;font-family:var(--mono);font-size:11px;color:var(--paper);opacity:.7}
+.work .cover{position:absolute;inset:0;z-index:5}
+.work .vplay{position:absolute;z-index:3;top:50%;left:50%;width:54px;height:54px;border-radius:50%;
+  background:rgba(14,13,11,.5);border:1px solid var(--line);backdrop-filter:blur(4px);
+  display:grid;place-items:center;opacity:0;transition:.3s;transform:translate(-50%,-50%) scale(.9)}
+figure.work:hover .vplay{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.work .vplay::after{content:"";margin-left:3px;border-style:solid;border-width:8px 0 8px 13px;border-color:transparent transparent transparent var(--paper)}
+@media(min-width:861px){figure.work.center{grid-column:5 / span 4}}
+
+/* in-page player modal */
+.modal{position:fixed;inset:0;z-index:1000;display:none;place-items:center;padding:24px;
+  background:rgba(8,7,5,.92);backdrop-filter:blur(10px);animation:fade .25s ease}
+.modal.open{display:grid}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.modal-player{position:relative;height:min(86vh,760px);aspect-ratio:9/16;max-width:94vw;
+  border-radius:16px;overflow:hidden;border:1px solid var(--line);background:#000;
+  box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.modal-player iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.modal-close{position:absolute;top:18px;right:24px;z-index:2;background:none;border:0;
+  color:var(--paper);font-size:38px;line-height:1;cursor:pointer;opacity:.8;transition:opacity .2s}
+.modal-close:hover{opacity:1}
+
+/* ---------- SERVICES (editorial list, not a feature grid) ---------- */
+.svc{border-top:1px solid var(--line)}
+.svc-row{display:grid;grid-template-columns:64px 1.4fr 1fr auto;gap:24px;align-items:center;
+  padding:30px 6px;border-bottom:1px solid var(--line);transition:.25s}
+.svc-row:hover{background:var(--ink-2);padding-left:18px}
+.svc-row .idx{font-family:var(--mono);font-size:13px;color:var(--ember)}
+.svc-row h3{font-family:var(--serif);font-size:clamp(22px,2.6vw,30px);font-weight:500}
+.svc-row p{color:var(--muted);font-size:15px}
+.svc-row .price{font-family:var(--mono);font-size:14px;color:var(--ember);text-align:right;white-space:nowrap;transition:color .2s}
+.svc-row .price:hover{color:var(--paper)}
+.svc-row .price small{display:block;color:var(--muted);font-size:11px;margin-top:3px}
+
+/* ---------- PROCESS ---------- */
+.proc{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+.proc .card{border:1px solid var(--line);border-radius:14px;padding:28px;background:var(--ink-2)}
+.proc .num{font-family:var(--mono);font-size:13px;color:var(--ember);margin-bottom:38px}
+.proc h3{font-family:var(--serif);font-size:24px;font-weight:500;margin-bottom:10px}
+.proc p{color:var(--muted);font-size:15px}
+
+/* ---------- ABOUT / QUOTE ---------- */
+.about{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center}
+.about blockquote{font-family:var(--serif);font-weight:400;font-size:clamp(24px,3.2vw,40px);line-height:1.18;letter-spacing:-.01em}
+.about blockquote em{color:var(--ember);font-style:italic}
+.about .sig{margin-top:26px;display:flex;align-items:center;gap:14px}
+.about .sig b{font-weight:600}
+.about .sig span{color:var(--muted);font-size:14px}
+.about-card{border:1px solid var(--line);border-radius:14px;padding:30px;background:var(--ink-2)}
+.about-card .stat{display:flex;justify-content:space-between;padding:15px 0;border-bottom:1px solid var(--line);font-size:15px}
+.about-card .stat:last-child{border-bottom:0}
+.about-card .stat b{font-family:var(--serif);font-size:24px;font-weight:500;color:var(--paper)}
+.about-card .stat span{color:var(--muted);align-self:center}
+
+/* ---------- CTA / CONTACT ---------- */
+.cta{position:relative;border:1px solid var(--line);border-radius:20px;overflow:hidden;
+  background:
+   radial-gradient(120% 160% at 80% 0%,rgba(233,162,59,.16),transparent 55%),
+   radial-gradient(120% 160% at 0% 100%,rgba(224,98,58,.14),transparent 55%),
+   var(--ink-2);
+  padding:clamp(40px,6vw,76px);text-align:center}
+.cta h2{font-family:var(--serif);font-weight:500;font-size:clamp(32px,5.4vw,66px);line-height:1;letter-spacing:-.02em;margin-bottom:22px}
+.cta p{color:var(--muted);max-width:46ch;margin:0 auto 34px;font-size:clamp(15px,1.5vw,18px)}
+.cta-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn-lg{padding:16px 30px;font-size:16px}
+.cta .small{margin-top:26px;font-family:var(--mono);font-size:12.5px;color:var(--muted);letter-spacing:.04em}
+.cta .small a{color:var(--ember)}
+
+/* ---------- FOOTER ---------- */
+footer{border-top:1px solid var(--line);padding:50px 0 60px;margin-top:clamp(60px,8vw,100px)}
+.foot{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
+.foot .logo{font-size:20px}
+.foot-links{display:flex;gap:26px;font-size:14px;color:var(--muted)}
+.foot-links a:hover{color:var(--paper)}
+.foot .copy{width:100%;border-top:1px solid var(--line);margin-top:28px;padding-top:24px;
+  display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:13px;font-family:var(--mono)}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+
+/* ---------- RESPONSIVE ---------- */
+@media(max-width:860px){
+  .nav-links{display:none}
+  .menu-btn{display:block}
+  .nav-links.open{display:flex;position:absolute;top:72px;left:0;right:0;flex-direction:column;gap:18px;
+    background:var(--ink);border-bottom:1px solid var(--line);padding:24px clamp(20px,5vw,40px)}
+  .about{grid-template-columns:1fr;gap:32px}
+  .proc{grid-template-columns:1fr}
+  .svc-row{grid-template-columns:40px 1fr;row-gap:6px}
+  .svc-row p{grid-column:2}
+  .svc-row .price{grid-column:2;text-align:left;margin-top:4px}
+  figure.work,figure.work.big,figure.work.small,figure.work.tall{grid-column:span 12}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header>
+  <div class="wrap">
+    <nav>
+      <a href="#top" class="logo">dino<span>edits</span></a>
+      <div class="nav-links" id="navlinks">
+        <a href="#work">Work</a>
+        <a href="#reel">Reel</a>
+        <a href="#services">Services</a>
+        <a href="#process">Process</a>
+        <a href="#contact" class="btn btn-primary">Book a call</a>
+      </div>
+      <button class="menu-btn" id="menubtn" aria-label="Menu">☰</button>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="reel">
+  <div class="wrap">
+    <div class="hero-top">
+      <div>
+        <div class="tc eyebrow">REC · video editor for hire</div>
+        <h1>Edits that earn the <em>watch.</em></h1>
+      </div>
+      <p class="hero-lede">I'm Dino — a video editor specialising in <strong>short-form</strong>, plus YouTube and brand films, for people who'd rather create than sit in a timeline at 2am. Press play.</p>
+    </div>
+
+    <!-- ===== REPLACE: SHOWREEL =====
+         To use your own reel, delete the placeholder block below and paste ONE of:
+         <video src="reel.mp4" controls poster="reel-cover.jpg"></video>
+         <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe>
+    -->
+    <div class="reel">
+      <iframe src="https://www.youtube.com/embed/DKD_qQZaQEk?rel=0&modestbranding=1"
+              title="dinoedits showreel"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MARQUEE ============ -->
+<div class="strip">
+  <div class="strip-row">
+    <span>Short-form <b>/</b> YouTube long-form <b>/</b> Brand films <b>/</b> Color grade <b>/</b> Sound design <b>/</b> Motion graphics <b>/</b> Subtitles <b>/</b>&nbsp;</span>
+    <span>Short-form <b>/</b> YouTube long-form <b>/</b> Brand films <b>/</b> Color grade <b>/</b> Sound design <b>/</b> Motion graphics <b>/</b> Subtitles <b>/</b>&nbsp;</span>
+  </div>
+</div>
+
+<!-- ============ WORK / GALLERY ============ -->
+<section id="work">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <div class="tc eyebrow">Selected work</div>
+        <h2>Recent edits.</h2>
+      </div>
+      <p>Real projects, real retention. Click any frame to watch.</p>
+    </div>
+
+    <!-- ===== GALLERY =====
+         Each frame links to a YouTube Short and uses its thumbnail automatically.
+         To swap a video: change BOTH the href (…/shorts/ID) and the thumbnail
+         url (img.youtube.com/vi/ID/hqdefault.jpg). Rename the <span class="ttl"> text freely.
+    -->
+    <div class="gallery">
+      <figure class="work small" data-cat="short">
+        <div class="ph" style="background-image:url('https://img.youtube.com/vi/_tBPbz8iu1w/hqdefault.jpg')"></div>
+        <span class="num">01</span>
+        <div class="vplay" aria-hidden="true"></div>
+        <figcaption><span class="ttl">Edit 01</span><span class="cat">YouTube Shorts</span></figcaption>
+        <a class="cover" href="https://youtube.com/shorts/_tBPbz8iu1w" target="_blank" rel="noopener" aria-label="Watch Edit 01"></a>
+      </figure>
+      <figure class="work small" data-cat="short">
+        <div class="ph" style="background-image:url('https://img.youtube.com/vi/tQerQTge_NM/hqdefault.jpg')"></div>
+        <span class="num">02</span>
+        <div class="vplay" aria-hidden="true"></div>
+        <figcaption><span class="ttl">Edit 02</span><span class="cat">YouTube Shorts</span></figcaption>
+        <a class="cover" href="https://youtube.com/shorts/tQerQTge_NM" target="_blank" rel="noopener" aria-label="Watch Edit 02"></a>
+      </figure>
+      <figure class="work small" data-cat="short">
+        <div class="ph" style="background-image:url('https://img.youtube.com/vi/lc8FulmUH1E/hqdefault.jpg')"></div>
+        <span class="num">03</span>
+        <div class="vplay" aria-hidden="true"></div>
+        <figcaption><span class="ttl">Edit 03</span><span class="cat">YouTube Shorts</span></figcaption>
+        <a class="cover" href="https://youtube.com/shorts/lc8FulmUH1E" target="_blank" rel="noopener" aria-label="Watch Edit 03"></a>
+      </figure>
+      <figure class="work small" data-cat="short">
+        <div class="ph" style="background-image:url('https://img.youtube.com/vi/gEsdT_xA8rY/hqdefault.jpg')"></div>
+        <span class="num">04</span>
+        <div class="vplay" aria-hidden="true"></div>
+        <figcaption><span class="ttl">Edit 04</span><span class="cat">YouTube Shorts</span></figcaption>
+        <a class="cover" href="https://youtube.com/shorts/gEsdT_xA8rY" target="_blank" rel="noopener" aria-label="Watch Edit 04"></a>
+      </figure>
+      <figure class="work small" data-cat="short">
+        <div class="ph" style="background-image:url('https://img.youtube.com/vi/JgV3fBhUVD4/hqdefault.jpg')"></div>
+        <span class="num">05</span>
+        <div class="vplay" aria-hidden="true"></div>
+        <figcaption><span class="ttl">Edit 05</span><span class="cat">YouTube Shorts</span></figcaption>
+        <a class="cover" href="https://youtube.com/shorts/JgV3fBhUVD4" target="_blank" rel="noopener" aria-label="Watch Edit 05"></a>
+      </figure>
+      <figure class="work small" data-cat="short">
+        <div class="ph" style="background-image:url('https://img.youtube.com/vi/JtMWVcCQYZs/hqdefault.jpg')"></div>
+        <span class="num">06</span>
+        <div class="vplay" aria-hidden="true"></div>
+        <figcaption><span class="ttl">Edit 06</span><span class="cat">YouTube Shorts</span></figcaption>
+        <a class="cover" href="https://youtube.com/shorts/JtMWVcCQYZs" target="_blank" rel="noopener" aria-label="Watch Edit 06"></a>
+      </figure>
+      <figure class="work small center" data-cat="short">
+        <div class="ph" style="background-image:url('https://img.youtube.com/vi/JQpktnxH5h4/hqdefault.jpg')"></div>
+        <span class="num">07</span>
+        <div class="vplay" aria-hidden="true"></div>
+        <figcaption><span class="ttl">Edit 07</span><span class="cat">YouTube Shorts</span></figcaption>
+        <a class="cover" href="https://youtube.com/shorts/JQpktnxH5h4" target="_blank" rel="noopener" aria-label="Watch Edit 07"></a>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SERVICES ============ -->
+<section id="services">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <div class="tc eyebrow">What I cut</div>
+        <h2>Pick the room, I'll handle the edit.</h2>
+      </div>
+      <p>Every project's different, so pricing is tailored to your footage, length and turnaround. DM me and I'll send a quote the same day.</p>
+    </div>
+
+    <div class="svc reveal">
+      <div class="svc-row">
+        <div class="idx">01</div>
+        <h3>Short-form / Reels</h3>
+        <p>Hooks, captions, sound design and pacing built to survive the scroll. Vertical-native.</p>
+        <a class="price" href="https://instagram.com/dino.render" target="_blank" rel="noopener">DM for price →<small>48h turnaround</small></a>
+      </div>
+      <div class="svc-row">
+        <div class="idx">02</div>
+        <h3>YouTube long-form</h3>
+        <p>Story structure, B-roll, motion graphics and retention edits for 8–20 minute videos.</p>
+        <a class="price" href="https://instagram.com/dino.render" target="_blank" rel="noopener">DM for price →<small>3–5 days</small></a>
+      </div>
+      <div class="svc-row">
+        <div class="idx">03</div>
+        <h3>Brand & founder films</h3>
+        <p>Polished, cinematic cuts with grade and sound for sites, ads and launches.</p>
+        <a class="price" href="https://instagram.com/dino.render" target="_blank" rel="noopener">DM for price →<small>scoped per project</small></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROCESS ============ -->
+<section id="process">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <div class="tc eyebrow">How it runs</div>
+        <h2>Simple to work with. On time, every time.</h2>
+      </div>
+      <p>No agency layers, no ghosting. You talk to the person doing the edit — me.</p>
+    </div>
+    <div class="proc">
+      <div class="card reveal"><div class="num">01 — SEND</div><h3>Drop the footage</h3><p>Send raw files and a one-line brief: what it's for, the vibe, and any references you love.</p></div>
+      <div class="card reveal"><div class="num">02 — CUT</div><h3>First cut in days</h3><p>I edit, grade and sound-design the whole thing, then send a private review link with timestamps.</p></div>
+      <div class="card reveal"><div class="num">03 — SHIP</div><h3>Two rounds of changes</h3><p>You leave notes, I refine. You get final files in every format you need, ready to post.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section id="about">
+  <div class="wrap about">
+    <div class="reveal">
+      <div class="tc eyebrow" style="margin-bottom:24px">Why dinoedits</div>
+      <blockquote>Most videos lose people in the first ten seconds. My job is to make sure <em>yours doesn't</em> — every cut, caption and beat earns the next one.</blockquote>
+      <div class="sig">
+        <b>Dino</b><span>— editor behind dinoedits</span>
+      </div>
+    </div>
+    <div class="about-card reveal">
+      <div class="stat"><span>Videos delivered</span><b>50+</b></div>
+      <div class="stat"><span>Avg. first cut</span><b>3 days</b></div>
+      <div class="stat"><span>Revisions included</span><b>2 rounds</b></div>
+      <div class="stat"><span>Repeat clients</span><b>80%</b></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA / CONTACT ============ -->
+<section id="contact">
+  <div class="wrap">
+    <div class="cta reveal">
+      <div class="tc eyebrow" style="justify-content:center;margin-bottom:18px">Let's roll</div>
+      <h2>Got footage? Let's cut it.</h2>
+      <p>Tell me what you're making. I'll reply with a plan, a price and a start date — usually within a day.</p>
+      <div class="cta-actions">
+        <!-- REPLACE: EMAIL  — change the address below to your real inbox -->
+        <a class="btn btn-primary btn-lg" href="mailto:dino@dinoedits.com?subject=Project%20enquiry%20—%20dinoedits&body=Hi%20Dino,%0D%0A%0D%0AHere's%20what%20I'm%20making:%0D%0A-%20Type%20of%20video:%0D%0A-%20Length:%0D%0A-%20Deadline:%0D%0A-%20Link%20to%20footage%2Freferences:%0D%0A">Book a call →</a>
+        <a class="btn btn-ghost btn-lg" href="https://instagram.com/dino.render" target="_blank" rel="noopener">Message on Instagram</a>
+      </div>
+      <div class="small">Or reach me at <a href="mailto:dino@dinoedits.com">dino@dinoedits.com</a> · Instagram <a href="https://instagram.com/dino.render" target="_blank" rel="noopener">@dino.render</a></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <a href="#top" class="logo">dino<span>edits</span></a>
+      <div class="foot-links">
+        <a href="#work">Work</a>
+        <a href="#services">Services</a>
+        <a href="#process">Process</a>
+        <a href="https://instagram.com/dino.render" target="_blank" rel="noopener">Instagram</a>
+        <a href="mailto:dino@dinoedits.com">Email</a>
+      </div>
+    </div>
+    <div class="copy">
+      <span>© 2026 dinoedits — video editing</span>
+      <span>Built to be watched.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- in-page video player -->
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Video player">
+  <button class="modal-close" id="modalClose" aria-label="Close">&times;</button>
+  <div class="modal-player"><iframe id="modalFrame" title="dinoedits edit"
+    allow="autoplay; encrypted-media; picture-in-picture; web-share" allowfullscreen></iframe></div>
+</div>
+
+<script>
+// mobile menu
+const mb=document.getElementById('menubtn'),nl=document.getElementById('navlinks');
+mb.addEventListener('click',()=>nl.classList.toggle('open'));
+nl.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>nl.classList.remove('open')));
+
+// gallery filter
+const chips=document.querySelectorAll('.chip'),works=document.querySelectorAll('.work');
+chips.forEach(c=>c.addEventListener('click',()=>{
+  chips.forEach(x=>x.classList.remove('active'));c.classList.add('active');
+  const f=c.dataset.filter;
+  works.forEach(w=>{w.style.display=(f==='all'||w.dataset.cat===f)?'':'none';});
+}));
+
+// reel placeholder click (until a real video is added)
+const rb=document.getElementById('reelbox');
+if(rb&&!rb.querySelector('video,iframe')){
+  rb.addEventListener('click',()=>{
+    rb.querySelector('.reel-meta').innerHTML='<span class="dim">Drop your reel here</span> &nbsp; see "REPLACE: SHOWREEL" in the code';
+  });
+}
+
+// scroll reveal
+const io=new IntersectionObserver((es)=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.14});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// in-page short player
+const modal=document.getElementById('modal'),frame=document.getElementById('modalFrame');
+function openReel(id){
+  frame.src='https://www.youtube.com/embed/'+id+'?autoplay=1&rel=0&modestbranding=1&playsinline=1';
+  modal.classList.add('open');document.body.style.overflow='hidden';
+}
+function closeReel(){modal.classList.remove('open');frame.src='';document.body.style.overflow='';}
+document.querySelectorAll('.work .cover').forEach(a=>{
+  a.addEventListener('click',e=>{
+    e.preventDefault();
+    const id=a.href.split('/shorts/')[1].split(/[?&#]/)[0];
+    openReel(id);
+  });
+});
+document.getElementById('modalClose').addEventListener('click',closeReel);
+modal.addEventListener('click',e=>{if(e.target===modal)closeReel();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeReel();});
+</script>
+</body>
+</html>
