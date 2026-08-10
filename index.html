@@ -273,11 +273,13 @@ footer{border-top:1px solid var(--line);padding:50px 0 60px;margin-top:clamp(60p
 .lg-logo{font-family:var(--serif);font-size:38px;font-weight:600;letter-spacing:-.01em;margin-bottom:16px}
 .lg-logo span{color:var(--ember)}
 .lg-sub{font-family:var(--mono);font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:32px}
-.lg-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
-.lg-btns button{font-family:var(--sans);font-size:16px;font-weight:500;padding:15px 34px;border-radius:100px;cursor:pointer;
+.lg-btns{display:flex;gap:12px;justify-content:center;flex-wrap:nowrap}
+.lg-btns button{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  font-family:var(--sans);font-size:15px;font-weight:500;padding:14px 12px;border-radius:100px;cursor:pointer;
   border:1px solid var(--line);background:transparent;color:var(--paper);transition:transform .15s,background .2s,color .2s}
 .lg-btns button.hr{background:var(--ember);color:var(--ink);border-color:var(--ember)}
 .lg-btns button:hover{transform:translateY(-2px)}
+.lg-btns .flag{width:22px;height:15px;border-radius:3px;flex:0 0 auto;box-shadow:0 0 0 1px rgba(0,0,0,.2)}
 .lang{display:inline-flex;border:1px solid var(--line);border-radius:100px;overflow:hidden}
 .lang button{font-family:var(--mono);font-size:12px;letter-spacing:.06em;padding:7px 13px;background:transparent;border:0;color:var(--muted);cursor:pointer;transition:.2s}
 .lang button.on{background:var(--paper);color:var(--ink)}
@@ -294,8 +296,8 @@ footer{border-top:1px solid var(--line);padding:50px 0 60px;margin-top:clamp(60p
     <div class="lg-logo">dino<span>edits</span></div>
     <div class="lg-sub">Odaberi jezik &nbsp;·&nbsp; Choose your language</div>
     <div class="lg-btns">
-      <button class="hr" data-l="hr">🇭🇷 Hrvatski</button>
-      <button data-l="en">🇬🇧 English</button>
+      <button class="hr" data-l="hr"><svg class="flag" viewBox="0 0 30 20"><rect width="30" height="20" fill="#f0f0f0"/><rect width="30" height="6.67" fill="#d81e05"/><rect y="13.33" width="30" height="6.67" fill="#12127a"/><rect x="11" y="6" width="8" height="8" fill="#d81e05"/><rect x="11" y="6" width="8" height="8" fill="none" stroke="#12127a" stroke-width="0.7"/></svg>Hrvatski</button>
+      <button data-l="en"><svg class="flag" viewBox="0 0 60 30"><rect width="60" height="30" fill="#012169"/><path d="M0,0 60,30 M60,0 0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 60,30 M60,0 0,30" stroke="#C8102E" stroke-width="4"/><path d="M30,0 V30 M0,15 H60" stroke="#fff" stroke-width="10"/><path d="M30,0 V30 M0,15 H60" stroke="#C8102E" stroke-width="6"/></svg>English</button>
     </div>
   </div>
 </div>
