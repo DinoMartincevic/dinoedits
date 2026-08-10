@@ -264,9 +264,12 @@ footer{border-top:1px solid var(--line);padding:50px 0 60px;margin-top:clamp(60p
 
 /* ---------- LANGUAGE GATE + TOGGLE ---------- */
 .lang-gate{position:fixed;inset:0;z-index:2000;display:grid;place-items:center;padding:24px;text-align:center;
-  background:radial-gradient(120% 120% at 50% 0%,#1a160f 0%,#0b0a07 70%)}
+  background:rgba(8,7,5,.5);backdrop-filter:blur(16px) saturate(120%);-webkit-backdrop-filter:blur(16px) saturate(120%)}
 :root[data-lang="hr"] .lang-gate,:root[data-lang="en"] .lang-gate{display:none}
-.lg-inner{max-width:440px;animation:fade .4s ease}
+.lg-inner{width:min(390px,90vw);padding:46px 38px;border-radius:22px;text-align:center;
+  background:rgba(20,18,14,.86);border:1px solid var(--line);box-shadow:0 30px 90px rgba(0,0,0,.55);
+  animation:pop .35s cubic-bezier(.2,.8,.2,1)}
+@keyframes pop{from{opacity:0;transform:scale(.94) translateY(8px)}to{opacity:1;transform:none}}
 .lg-logo{font-family:var(--serif);font-size:38px;font-weight:600;letter-spacing:-.01em;margin-bottom:16px}
 .lg-logo span{color:var(--ember)}
 .lg-sub{font-family:var(--mono);font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:32px}
@@ -291,8 +294,8 @@ footer{border-top:1px solid var(--line);padding:50px 0 60px;margin-top:clamp(60p
     <div class="lg-logo">dino<span>edits</span></div>
     <div class="lg-sub">Odaberi jezik &nbsp;·&nbsp; Choose your language</div>
     <div class="lg-btns">
-      <button class="hr" data-l="hr">Hrvatski</button>
-      <button data-l="en">English</button>
+      <button class="hr" data-l="hr">🇭🇷 Hrvatski</button>
+      <button data-l="en">🇬🇧 English</button>
     </div>
   </div>
 </div>
