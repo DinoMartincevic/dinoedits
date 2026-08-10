@@ -261,9 +261,41 @@ footer{border-top:1px solid var(--line);padding:50px 0 60px;margin-top:clamp(60p
   .svc-row .price{grid-column:2;text-align:left;margin-top:4px}
   figure.work,figure.work.big,figure.work.small,figure.work.tall{grid-column:span 12}
 }
+
+/* ---------- LANGUAGE GATE + TOGGLE ---------- */
+.lang-gate{position:fixed;inset:0;z-index:2000;display:grid;place-items:center;padding:24px;text-align:center;
+  background:radial-gradient(120% 120% at 50% 0%,#1a160f 0%,#0b0a07 70%)}
+:root[data-lang="hr"] .lang-gate,:root[data-lang="en"] .lang-gate{display:none}
+.lg-inner{max-width:440px;animation:fade .4s ease}
+.lg-logo{font-family:var(--serif);font-size:38px;font-weight:600;letter-spacing:-.01em;margin-bottom:16px}
+.lg-logo span{color:var(--ember)}
+.lg-sub{font-family:var(--mono);font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:32px}
+.lg-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.lg-btns button{font-family:var(--sans);font-size:16px;font-weight:500;padding:15px 34px;border-radius:100px;cursor:pointer;
+  border:1px solid var(--line);background:transparent;color:var(--paper);transition:transform .15s,background .2s,color .2s}
+.lg-btns button.hr{background:var(--ember);color:var(--ink);border-color:var(--ember)}
+.lg-btns button:hover{transform:translateY(-2px)}
+.lang{display:inline-flex;border:1px solid var(--line);border-radius:100px;overflow:hidden}
+.lang button{font-family:var(--mono);font-size:12px;letter-spacing:.06em;padding:7px 13px;background:transparent;border:0;color:var(--muted);cursor:pointer;transition:.2s}
+.lang button.on{background:var(--paper);color:var(--ink)}
+.lang button:hover{color:var(--paper)}
+.lang button.on:hover{color:var(--ink)}
 </style>
 </head>
 <body>
+<script>document.documentElement.dataset.lang=localStorage.getItem('dinoedits_lang')||'';</script>
+
+<!-- ============ LANGUAGE GATE ============ -->
+<div class="lang-gate" id="langGate">
+  <div class="lg-inner">
+    <div class="lg-logo">dino<span>edits</span></div>
+    <div class="lg-sub">Odaberi jezik &nbsp;·&nbsp; Choose your language</div>
+    <div class="lg-btns">
+      <button class="hr" data-l="hr">Hrvatski</button>
+      <button data-l="en">English</button>
+    </div>
+  </div>
+</div>
 
 <!-- ============ NAV ============ -->
 <header>
@@ -276,6 +308,7 @@ footer{border-top:1px solid var(--line);padding:50px 0 60px;margin-top:clamp(60p
         <a href="#services">Services</a>
         <a href="#process">Process</a>
         <a href="#contact" class="btn btn-primary">Book a call</a>
+        <div class="lang" id="lang"><button data-l="hr">HR</button><button data-l="en">EN</button></div>
       </div>
       <button class="menu-btn" id="menubtn" aria-label="Menu">☰</button>
     </nav>
@@ -582,6 +615,71 @@ document.querySelectorAll('.work .cover').forEach(a=>{
 document.getElementById('modalClose').addEventListener('click',closeReel);
 modal.addEventListener('click',e=>{if(e.target===modal)closeReel();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeReel();});
+
+// ---------- language (HR / EN) ----------
+const I18N=[
+ ['.nav-links a[href="#work"]','Radovi'],
+ ['.nav-links a[href="#services"]','Usluge'],
+ ['.nav-links a[href="#process"]','Proces'],
+ ['.nav-links a.btn-primary','Rezerviraj poziv'],
+ ['.hero .eyebrow','REC · video editor za najam'],
+ ['.hero h1','Montaža koja <em>drži pažnju.</em>'],
+ ['.hero-lede','Ja sam Dino — video editor specijaliziran za <strong>short-form</strong>, uz YouTube i brand videe, za ljude koji radije stvaraju nego sjede u montaži u 2 ujutro. Pritisni play.'],
+ ['#work .eyebrow','Odabrani radovi'],
+ ['#work h2','Nedavne montaže.'],
+ ['#work .section-head p','Pravi projekti, prava gledanost. Klikni bilo koji okvir za gledanje.'],
+ ['#services .eyebrow','Što montiram'],
+ ['#services h2','Odaberi format, montažu prepusti meni.'],
+ ['#services .section-head p','Svaki projekt je drugačiji, pa je cijena prilagođena tvom materijalu, dužini i roku. Pošalji DM i isti dan šaljem ponudu.'],
+ ['#services .svc-row:nth-of-type(1) p','Kuke, titlovi, sound design i ritam koji preživljavaju scroll. Vertikalno izvorno.'],
+ ['#services .svc-row:nth-of-type(1) .price','DM za cijenu →<small>48h rok</small>'],
+ ['#services .svc-row:nth-of-type(2) p','Struktura priče, B-roll, motion graphics i retention montaža za videe od 8–20 minuta.'],
+ ['#services .svc-row:nth-of-type(2) .price','DM za cijenu →<small>3–5 dana</small>'],
+ ['#services .svc-row:nth-of-type(3) h3','Brand i founder videi'],
+ ['#services .svc-row:nth-of-type(3) p','Uglađene, filmske montaže s gradingom i zvukom za web, oglase i lansiranja.'],
+ ['#services .svc-row:nth-of-type(3) .price','DM za cijenu →<small>po dogovoru</small>'],
+ ['#process .eyebrow','Kako ide'],
+ ['#process h2','Jednostavna suradnja. Uvijek na vrijeme.'],
+ ['#process .section-head p','Bez agencijskih slojeva, bez ignoriranja. Razgovaraš s osobom koja montira — sa mnom.'],
+ ['.proc .card:nth-of-type(1) .num','01 — POŠALJI'],
+ ['.proc .card:nth-of-type(1) h3','Pošalji materijal'],
+ ['.proc .card:nth-of-type(1) p','Pošalji sirove fajlove i kratki brief: za što je, kakav vibe i reference koje voliš.'],
+ ['.proc .card:nth-of-type(2) .num','02 — MONTAŽA'],
+ ['.proc .card:nth-of-type(2) h3','Prva verzija za par dana'],
+ ['.proc .card:nth-of-type(2) p','Montiram, gradiram i radim sound design, pa šaljem privatni link za pregled s timestampovima.'],
+ ['.proc .card:nth-of-type(3) .num','03 — ISPORUKA'],
+ ['.proc .card:nth-of-type(3) h3','Dvije runde izmjena'],
+ ['.proc .card:nth-of-type(3) p','Ostaviš komentare, ja doradim. Dobiješ finalne fajlove u svim formatima, spremne za objavu.'],
+ ['.about .eyebrow','Zašto dinoedits'],
+ ['.about blockquote','Većina videa izgubi gledatelje u prvih deset sekundi. Moj posao je da tvoj ne — svaki rez, titl i beat zarađuje sljedeći.'],
+ ['.about .sig span','— editor iza dinoedits'],
+ ['.about-card .stat:nth-of-type(1) span','Isporučeni videi'],
+ ['.about-card .stat:nth-of-type(2) span','Prosječna prva verzija'],
+ ['.about-card .stat:nth-of-type(3) span','Uključene izmjene'],
+ ['.about-card .stat:nth-of-type(4) span','Klijenti koji se vraćaju'],
+ ['#contact .eyebrow','Idemo'],
+ ['#contact h2','Imaš materijal? Idemo montirati.'],
+ ['.cta p','Reci mi što radiš. Odgovaram s planom, cijenom i datumom početka — obično unutar dana.'],
+ ['.cta .btn-primary','Rezerviraj poziv →'],
+ ['.cta .btn-ghost','Poruka na Instagramu'],
+ ['.cta .small','Ili me kontaktiraj na <a href="mailto:dino@dinoedits.com">dino@dinoedits.com</a> · Instagram <a href="https://instagram.com/dino.render" target="_blank" rel="noopener">@dino.render</a>'],
+ ['footer .foot-links a:nth-of-type(1)','Radovi'],
+ ['footer .foot-links a:nth-of-type(2)','Usluge'],
+ ['footer .foot-links a:nth-of-type(3)','Proces'],
+ ['.copy span:nth-of-type(1)','© 2026 dinoedits — video montaža'],
+ ['.copy span:nth-of-type(2)','Stvoreno da se gleda.']
+];
+const enCache=new Map();
+I18N.forEach(([sel])=>{const el=document.querySelector(sel);if(el)enCache.set(sel,el.innerHTML);});
+function markActive(l){document.querySelectorAll('.lang button, .lg-btns button').forEach(b=>b.classList.toggle('on',b.dataset.l===l));}
+function applyLang(l){
+  I18N.forEach(([sel,hr])=>{const el=document.querySelector(sel);if(!el)return;el.innerHTML=(l==='hr')?hr:enCache.get(sel);});
+  document.documentElement.lang=l;document.documentElement.dataset.lang=l;markActive(l);
+}
+function chooseLang(l){localStorage.setItem('dinoedits_lang',l);applyLang(l);}
+document.querySelectorAll('.lang button, .lg-btns button').forEach(b=>b.addEventListener('click',()=>chooseLang(b.dataset.l)));
+const savedLang=localStorage.getItem('dinoedits_lang');
+if(savedLang){applyLang(savedLang);} else {markActive('en');}
 </script>
 </body>
 </html>
