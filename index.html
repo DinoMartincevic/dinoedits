@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>dinoedits — Video editing that earns the watch</title>
+<title>dinoedits | Video editing that earns the watch</title>
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="apple-touch-icon" href="logo.png">
 <meta name="description" content="dinoedits is a video editor specialising in short-form for creators and brands — plus YouTube and brand films, cut to keep people watching. Book a call." />
 
 <!-- ====================================================================
@@ -75,7 +77,8 @@ header{position:sticky;top:0;z-index:100;
   background:linear-gradient(var(--ink),rgba(14,13,11,.72));
   border-bottom:1px solid var(--line)}
 nav{display:flex;align-items:center;justify-content:space-between;height:72px}
-.logo{font-family:var(--serif);font-size:23px;font-weight:600;letter-spacing:-.01em}
+.logo{display:inline-flex;align-items:center;gap:10px;font-family:var(--serif);font-size:23px;font-weight:600;letter-spacing:-.01em}
+.logo-mark{width:30px;height:30px;border-radius:8px;display:block;flex:0 0 auto}
 .logo span{color:var(--ember)}
 .nav-links{display:flex;gap:34px;align-items:center}
 .nav-links a{font-size:14.5px;color:var(--muted);transition:color .2s}
@@ -306,7 +309,7 @@ footer{border-top:1px solid var(--line);padding:50px 0 60px;margin-top:clamp(60p
 <header>
   <div class="wrap">
     <nav>
-      <a href="#top" class="logo">dino<span>edits</span></a>
+      <a href="#top" class="logo"><img class="logo-mark" src="logo.png" alt="dinoedits logo" width="30" height="30">dino<span>edits</span></a>
       <div class="nav-links" id="navlinks">
         <a href="#work">Work</a>
         <a href="#reel">Reel</a>
